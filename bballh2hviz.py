@@ -18,7 +18,8 @@ def grab_url(fav, opp):
 
 # Check if two teams exist and are not equal
 def validate_teams(fav, opp):
-	if fav not in teams or opp not in teams:
+	keys = [*full_names]
+	if fav not in full_names or opp not in full_names:
 		print('ERROR: one or both of the eams you specified is invalid. Please consult README for acceptable abbreviations')
 		sys.exit(1)
 

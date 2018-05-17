@@ -1,8 +1,3 @@
-teams = ['ari', 'atl', 'bal', 'bos', 'chi', 'wsx', 'cin', 'cle',
-		 'col', 'det', 'hou', 'kc', 'laa', 'la', 'mia', 'mil',
-		 'min', 'nym', 'nyy', 'oak', 'phi', 'pit', 'sd', 'sf',
-		 'sea', 'stl', 'tb', 'tex', 'tor', 'wsh']
-
 full_names = {'ari': 'Arizona Diamondbacks',
 			  'atl': 'Atlanta Braves',
 			  'bal': 'Baltimore Orioles',
