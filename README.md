@@ -4,7 +4,7 @@ Plot the head to head history between two teams
 
 ## How to  
   
-* Run it using: ```python3 bballh2hviz.py [TEAM1 TEAM2]```. Ommitting the team names will allow you to see visualizations of all possible head to head records in MLB history  
+* Run it using: ```python3 bballh2hviz.py [TEAM1 TEAM2]```  
 * Refer to ```bballh2hcnst.py``` for team names and their respective nicknames  
 * Data is scraped using BeautifulSoup  
 * Visualizations are displayed using PyPlot  
