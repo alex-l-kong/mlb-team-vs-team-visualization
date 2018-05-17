@@ -1,4 +1,4 @@
-# Head to head MLB record visualizations  
+# MLB head to head record visualizations  
   
 Plot the head to head history between two teams  
 
