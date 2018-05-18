@@ -17,15 +17,49 @@ def grab_url(fav, opp):
 	return BeautifulSoup(page, 'lxml')
 
 # Check if two teams exist and are not equal
-def validate_teams(fav, opp):
-	keys = [*full_names]
+def validate_teams():
+	fav = sys.argv[0]
+	opp = sys.argv[1]
+
 	if fav not in full_names or opp not in full_names:
-		print('ERROR: one or both of the eams you specified is invalid. Please consult README for acceptable abbreviations')
+		print('ERROR: one or both of the teams you specified is invalid. Please consult the README for acceptable abbreviations.')
 		sys.exit(1)
 
 	if fav == opp:
 		print('ERROR: You cannot specify the same team twice')
 		sys.exit(1)
+
+	return (fav, opp)
+
+# Make sure all flags specified are valid
+def extract_flags():
+	flags = []
+	sys.argv.remove(sys.argv[0])
+
+	while (sys.argv[0][0] == '-'):
+		if len(sys.argv[0]) == 1:
+			print('ERROR: empty flag specified. Please consult the README for acceptable flags.')
+			sys.exit(1)
+
+		for char in sys.argv[0][1:]:
+			adj_flag = char.lower()
+
+			if adj_flag not in good_flags:
+				print(adj_flag)
+				print('ERROR: invalid flag specified. Please consult the README for acceptable flags.')
+				sys.exit(1)
+			elif adj_flag in flags:
+				print('ERROR: duplicate flag specified.')
+				sys.exit(1)
+
+			flags.append(adj_flag)
+		
+		sys.argv.remove(sys.argv[0])
+
+	if len(flags) == 0:
+		flags = ['o', 'h', 'a', 'p']
+
+	return flags
 
 # For years in which there wasn't a game in a matchup played
 # Fill the gap years in between with data from the last valid year
@@ -142,7 +176,7 @@ def cum_win_percs(stats):
 	return win_percs
 
 # Display visualization results in graphical format
-def viz(cum_win_percs, fav, opp):
+def viz(cum_win_percs, flags, fav, opp):
 	x = [*cum_win_percs]
 
 	y_overall = [cum_win_percs[val]['overall_win_percentage'] for val in [*cum_win_percs]]
@@ -150,10 +184,14 @@ def viz(cum_win_percs, fav, opp):
 	y_away = [cum_win_percs[val]['away_win_percentage'] for val in [*cum_win_percs]]
 	y_playoff = [cum_win_percs[val]['playoff_win_percentage'] for val in [*cum_win_percs]]
 
-	plt.plot(x, y_overall, 'ro', label='Overall winning percentage')
-	plt.plot(x, y_home, 'go', label='Home winning percentage')
-	plt.plot(x, y_away, 'bo', label='Away winning percentage')
-	plt.plot(x, y_playoff, 'mo', label='Playoff winning percentage')
+	if 'o' in flags:
+		plt.plot(x, y_overall, 'ro', label='Overall winning percentage')
+	if 'h' in flags:
+		plt.plot(x, y_home, 'go', label='Home winning percentage')
+	if 'a' in flags:
+		plt.plot(x, y_away, 'bo', label='Away winning percentage')
+	if 'p' in flags:
+		plt.plot(x, y_playoff, 'mo', label='Playoff winning percentage')
 
 	plt.title('%s vs %s' % (full_names[fav], full_names[opp]))
 
@@ -173,7 +211,7 @@ def viz(cum_win_percs, fav, opp):
 	plt.show()
 
 # Pull the specified head to head record and process it
-def search_data(fav, opp):
+def search_data(fav, opp, flags):
 	h2h_data = grab_url(fav, opp)
 	table = h2h_data.findAll('span', {'class': 'hovl'})
 	stats = {}
@@ -189,23 +227,24 @@ def search_data(fav, opp):
 	# Because of interleague games, in some head to head records
 	# the last game between two teams might have been played up to 3 years ago
 	stats = update_to_today(datetime.now().year, stats)
-
 	results = cum_win_percs(stats)
 
 	# use the following lines to write data to a file confirming the data is accurate
 	# with open('out.json', 'w') as outfile:
 	# 	outfile.write(json.dumps(results, indent=4))
 
-	viz(results, fav, opp)
+	viz(results, flags, fav, opp)
 
 
 def main():
-	if len(sys.argv) != 3:
-		print('USAGE: python3 bballh2hviz.py TEAM1 TEAM2')
+	if len(sys.argv) < 3 or len(sys.argv) > 7:
+		print('USAGE: python3 bballh2hviz.py [-ohap] TEAM1 TEAM2')
 		sys.exit(1)
 
-	validate_teams(sys.argv[1], sys.argv[2])
-	search_data(sys.argv[1], sys.argv[2])
+	flags = extract_flags()
+	fav, opp = validate_teams()
+
+	search_data(fav, opp, flags)
 
 if __name__ == '__main__':
 	main()
