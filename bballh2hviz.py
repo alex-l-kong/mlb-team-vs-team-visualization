@@ -201,7 +201,7 @@ def search_data(fav, opp):
 
 def main():
 	if len(sys.argv) != 3:
-		print('USAGE: python3 bballh2hviz.py [TEAM1 TEAM2]')
+		print('USAGE: python3 bballh2hviz.py TEAM1 TEAM2')
 		sys.exit(1)
 
 	validate_teams(sys.argv[1], sys.argv[2])
