@@ -188,7 +188,7 @@ def search_data(fav, opp):
 
 	# Because of interleague games, in some head to head records
 	# the last game between two teams might have been played up to 3 years ago
-	update_to_today(datetime.now().year, stats)
+	stats = update_to_today(datetime.now().year, stats)
 
 	results = cum_win_percs(stats)
 
