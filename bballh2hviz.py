@@ -4,11 +4,11 @@ import re
 import importlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker
+import bballh2hcnst as bh2h
 # import json
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from datetime import datetime
-from bballh2hcnst import *
 
 # Use BeautifulSoup to scrape respective web page
 def grab_url(fav, opp):
@@ -21,7 +21,7 @@ def validate_teams():
 	fav = sys.argv[0]
 	opp = sys.argv[1]
 
-	if fav not in full_names or opp not in full_names:
+	if fav not in bh2h.full_names or opp not in bh2h.full_names:
 		print('ERROR: one or both of the teams you specified is invalid. Please consult the README for acceptable abbreviations.')
 		sys.exit(1)
 
@@ -44,7 +44,7 @@ def extract_flags():
 		for char in sys.argv[0][1:]:
 			adj_flag = char.lower()
 
-			if adj_flag not in good_flags:
+			if adj_flag not in bh2h.good_flags:
 				print(adj_flag)
 				print('ERROR: invalid flag specified. Please consult the README for acceptable flags.')
 				sys.exit(1)
@@ -193,7 +193,7 @@ def viz(cum_win_percs, flags, fav, opp):
 	if 'p' in flags:
 		plt.plot(x, y_playoff, 'mo', label='Playoff winning percentage')
 
-	plt.title('%s vs %s' % (full_names[fav], full_names[opp]))
+	plt.title('%s vs %s' % (bh2h.full_names[fav], bh2h.full_names[opp]))
 
 	plt.xlabel('Year')
 	plt.ylabel('Win percentage')
